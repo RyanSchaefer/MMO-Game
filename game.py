@@ -22,7 +22,10 @@ class Building(object):
 	pass
 class Square(object):
 	def __init__(self):
-		self.items = []
+		self.items    = []
+		self.players  = []
+		self.resources= {}
+		self.square_id= "This variable should be updated when making a map"
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
@@ -31,15 +34,22 @@ class Group(object):
 	pass
 class Player(object):
 	def __init__(self):
-		self.inventory = {}
-		self.health = 100
+		self.inventory      = {}
+		self.health         = 100
 		self.carry_capacity = 100
-		self.group = None
+		self.group          = None
 class Building(object):
-	def describe():
+	def __init__(self):
+		self.players = []
+	def describe(self):
 		print "This is a basic description, update it when you make a building in a square"
 class Swamp(Square):
-	pass
+	def __init__(self):
+		self.items = []
+	def describe(self):
+		print "You arrive in a bogged area."
+		print "There appears to be a great amount of wood in this area, along with an ample water supply"
+		print "There are also %s" % " and ".join(self.items)
 class Desert(Square):
 	pass
 class Forrest(Square):
@@ -60,11 +70,10 @@ class Engine(object):
 		pickle.dump(self.variables, open("save.p", 'wb'))
 	def load(self):
 		self.variables = pickle.load(open("save.p", 'rb'))
-main = Engine("")
+	def update_square(self, square):
+		pass
+main = Engine()
 main.load()
+swamp = Swamp()
 print main.variables
-s = socket.socket()
-s.connect(("irc.twitch.tv", 6667))
-Swamp = Swamp(s)
-Swamp.add_player("me")
-print Swamp.players
+print swamp.describe()
