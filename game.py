@@ -21,23 +21,23 @@ import pickle
 class Building(object):
 	pass
 class Square(object):
-	def __init__(self, socket):
-		self.players = []
-	def add_player(self, player):
-		self.players.append(player)
-	def remove_player(self, player):
-		self.player.remove(player)
-	def send_info(self):
-		global socket
-		socket.send("hi")
+	def __init__(self):
+		self.items = []
+	def describe(self):
+		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
 	pass
 class Group(object):
 	pass
-class Person(object):
-	pass
+class Player(object):
+	def __init__(self):
+		self.inventory = {}
+		self.health = 100
+		self.carry_capacity = 100
+		self.group = None
 class Building(object):
-	pass
+	def describe():
+		print "This is a basic description, update it when you make a building in a square"
 class Swamp(Square):
 	pass
 class Desert(Square):
@@ -54,8 +54,8 @@ class Map(object):
 	def generate():
 		pass	
 class Engine(object):
-	def __init__(self, variables):
-		self.variables = variables
+	def __init__(self):
+		self.variables = None
 	def save(self):
 		pickle.dump(self.variables, open("save.p", 'wb'))
 	def load(self):
