@@ -11,4 +11,3 @@ while x != "accepted":
 	username = raw_input("Username: ")
 	password = getpass.getpass("Password: ")
 	x = ""
-"TESTING GIT UPDATE PUSH"
