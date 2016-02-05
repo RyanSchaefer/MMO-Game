@@ -32,8 +32,6 @@ class Square(object):
 		self.items    = []
 		self.players  = []
 		self.resources= {}
-		#needed since the name of the square is its id
-		self.type = ""
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
@@ -53,15 +51,17 @@ class Building(object):
 	def describe(self):
 		print "This is a basic description, update it when you make a building in a square"
 class Swamp(Square):
-	def __init__(self):
-		self.items = []
-		self.type = "swamp"
+	type = "swamp"
 	def describe(self):
 		print "You arrive in a bogged area."
 		print "There appears to be a great amount of wood in this area, along with an ample water supply"
 		print "There are also %s" % "; ".join(self.items)
 class Desert(Square):
-	pass
+	type = "desert"
+	def describe(self):
+		print "You arrive in a sprawling desert."
+		print "There appears to be a great amount of sand here, there is an oasis in the middle of the desert."
+		print "There are also %s" % "; ".join(self.items)
 class Forrest(Square):
 	pass
 class City(Square):
@@ -86,5 +86,6 @@ main = Engine("hello")
 main.save()
 # example declaration of square (square id is name): A1 = Swamp()
 A1 = Swamp()
-A1.items = ["a test", "another test"]
+A2 = Desert()
 print A1.describe()
+print A2.describe()
