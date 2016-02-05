@@ -25,13 +25,21 @@ try:
 except:
 	#os.mkdir("resources")
 	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
-class Building(object):
-	pass
+class Item(object):
+	def __init__(self):
+		self.attributes = {}
+		self.id = 0
+		self.amount = 1
+	def stack(self, item1, item2, limit):
+		if item1.id == item2.id:
+			item1.amount += item2.id
+			#@! todo remove item from players inventory
 class Square(object):
 	def __init__(self):
-		self.items    = []
+		self.items    = {}
 		self.players  = []
 		self.resources= {}
+		self.buildings= {}
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
@@ -47,7 +55,7 @@ class Player(object):
 class Building(object):
 	def __init__(self):
 		self.players = []
-		self.items = []
+		self.items   = {}
 	def describe(self):
 		print "This is a basic description, update it when you make a building in a square"
 class Swamp(Square):
