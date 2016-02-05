@@ -65,15 +65,15 @@ class Map(object):
 	def generate():
 		pass	
 class Engine(object):
-	def __init__(self):
-		self.variables = None
+	def __init__(self, variables):
+		self.variables = variables
 	def save(self):
-		pickle.dump(self.variables, open("save.p", 'wb'))
+		pickle.dump(self.variables, open("resources\\save.p", 'wb'))
 	def load(self):
-		self.variables = pickle.load(open("save.p", 'rb'))
+		self.variables = pickle.load(open("resources\\save.p", 'rb'))
 	def update_square(self, square):
 		pass
-main = Engine()
+main = Engine("")
 main.load()
 swamp = Swamp()
 print main.variables
