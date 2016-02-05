@@ -57,9 +57,9 @@ class Engine(object):
 	def __init__(self, variables):
 		self.variables = variables
 	def save(self):
-		pickle.dump(self.variables, open("resources\\save.p", 'wb'))
+		pickle.dump(self.variables, open("save.p", 'wb'))
 	def load(self):
-		self.variables = pickle.load(open("resources\\save.p", 'rb'))
+		self.variables = pickle.load(open("save.p", 'rb'))
 main = Engine("")
 main.load()
 print main.variables
