@@ -15,6 +15,7 @@ claim square a.k.a fortresses (upgradable) (requires you to have a decent sized 
 water is boundries of map
 formal battles (squares locked down?) (bonus for fighting?)
 """
+
 import random
 import socket
 import pickle
