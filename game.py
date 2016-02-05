@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 players are objects on the map
 connect to central server
@@ -15,10 +16,15 @@ claim square a.k.a fortresses (upgradable) (requires you to have a decent sized 
 water is boundries of map
 formal battles (squares locked down?) (bonus for fighting?)
 """
-
 import random
 import socket
 import pickle
+import os
+try:
+	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
+except:
+	#os.mkdir("resources")
+	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
 class Building(object):
 	pass
 class Square(object):
@@ -68,13 +74,13 @@ class Engine(object):
 	def __init__(self, variables):
 		self.variables = variables
 	def save(self):
-		pickle.dump(self.variables, open("resources\\save.p", 'wb'))
+		pickle.dump(self.variables, open(os.path.join("resources", "save.p"), 'wb'))
 	def load(self):
-		self.variables = pickle.load(open("resources\\save.p", 'rb'))
+		self.variables = pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
 	def update_square(self, square):
 		pass
-main = Engine("")
-main.load()
+main = Engine("hello")
+main.save()
 swamp = Swamp()
 print main.variables
 print swamp.describe()
