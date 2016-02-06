@@ -15,6 +15,8 @@ kills reward money (how much?)
 claim square a.k.a fortresses (upgradable) (requires you to have a decent sized squad before you can)
 water is boundries of map
 formal battles (squares locked down?) (bonus for fighting?)
+!@ MAJOR TODO PRINT SHOULD BE REPLACED WITH SEND !@
+!@ SHOULD SEND TO CLIENT !@
 """
 import random
 import socket
@@ -30,10 +32,7 @@ class Item(object):
 		self.attributes = {}
 		self.id = 0
 		self.amount = 1
-	def stack(self, item1, item2, limit):
-		if item1.id == item2.id:
-			item1.amount += item2.id
-			#@! todo remove item from players inventory
+		self.name = ""
 class Square(object):
 	def __init__(self):
 		self.items    = {}
@@ -49,9 +48,16 @@ class Group(object):
 class Player(object):
 	def __init__(self):
 		self.inventory      = {}
-		self.health         = 100
-		self.carry_capacity = 100
+		#!@ todo add more attributes
+		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
+	def add_item(self, items):
+		try:
+			items[0]
+		except:
+			print "Items must be a list"
+		for item in items:
+			self.inventory.update({item.name: item})
 class Building(object):
 	def __init__(self):
 		self.players = []
@@ -95,5 +101,7 @@ main.save()
 # example declaration of square (square id is name): A1 = Swamp()
 A1 = Swamp()
 A2 = Desert()
+me = Player()
+rock = Item()
 print A1.describe()
 print A2.describe()
