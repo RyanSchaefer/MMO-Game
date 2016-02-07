@@ -98,7 +98,7 @@ class Map(object):
 	def generate(self, size):
 		for y in range(size):
 			for x in range(size):
-				self.map.update({str(x) + ":" + str(y): random.choice(self.squares)})	
+				self.map.update({str(x+1) + ":" + str(y+1): random.choice(self.squares)})	
 class Engine(object):
 	def __init__(self, variables):
 		self.variables = variables
