@@ -25,7 +25,7 @@ import os
 try:
 	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
 except:
-	#os.mkdir("resources")
+	os.mkdir("resources")
 	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
 class Item(object):
 	def __init__(self):
@@ -41,6 +41,13 @@ class Square(object):
 		self.buildings= {}
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
+	def add_item(self, item):
+		try:
+			item[0]
+		except:
+			print "items must be a list"
+		for item in item:
+			self.items.update({item.name:item})
 class Job(object):
 	pass
 class Group(object):
@@ -85,8 +92,13 @@ class Bank(Building):
 class Fortress(Building):
 	pass
 class Map(object):
-	def generate():
-		pass	
+	def __init__(self, squares):
+		self.map = {}
+		self.squares = squares
+	def generate(self, size):
+		for y in range(size):
+			for x in range(size):
+				self.map.update({str(x) + ":" + str(y): random.choice(self.squares)})	
 class Engine(object):
 	def __init__(self, variables):
 		self.variables = variables
@@ -105,3 +117,7 @@ me = Player()
 rock = Item()
 print A1.describe()
 print A2.describe()
+map_1 = Map([Swamp(), Desert()])
+map_1.generate(10)
+print map_1.map
+map_1.map["1:1"].describe()
