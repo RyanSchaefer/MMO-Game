@@ -41,30 +41,16 @@ class Square(object):
 		self.buildings= {}
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
-	def add_item(self, item):
-		try:
-			item[0]
-		except:
-			print "items must be a list"
-		for item in item:
-			self.items.update({item.name:item})
 class Job(object):
 	pass
 class Group(object):
 	pass
 class Player(object):
 	def __init__(self):
-		self.inventory      = {}
+		self.items      = {}
 		#!@ todo add more attributes
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
-	def add_item(self, items):
-		try:
-			items[0]
-		except:
-			print "Items must be a list"
-		for item in items:
-			self.inventory.update({item.name: item})
 class Building(object):
 	def __init__(self):
 		self.players = []
@@ -106,18 +92,10 @@ class Engine(object):
 		pickle.dump(self.variables, open(os.path.join("resources", "save.p"), 'wb'))
 	def load(self):
 		self.variables = pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
-	def update_square(self, square):
-		pass
-main = Engine("hello")
-main.save()
-# example declaration of square (square id is name): A1 = Swamp()
-A1 = Swamp()
-A2 = Desert()
-me = Player()
-rock = Item()
-print A1.describe()
-print A2.describe()
-map_1 = Map([Swamp(), Desert()])
-map_1.generate(10)
-print map_1.map
-map_1.map["1:1"].describe()
+	def add_item(self, object, items):
+		try:
+			items[0]
+		except:
+			print "Items must be a list"
+		for item in items:
+			object.items.update({item.name: items})
