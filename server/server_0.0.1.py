@@ -1,22 +1,9 @@
 # coding: utf-8
 """
-players are objects on the map
-connect to central server
-map squares are randomly generated as biomes
-squads are formed w/ certian benefits (free weapons)
-tax can be placed on player in squad (handeled by server)
-walls of base are upgraded by players moving materials to bases
-players must be accepted into squad
-deserter penelties
-gather and sell resources (cities)
-encounters with other players (run / fight w/ chance based on equipment)
-map keeps track of where you have visited
-kills reward money (how much?)
-claim square a.k.a fortresses (upgradable) (requires you to have a decent sized squad before you can)
-water is boundries of map
-formal battles (squares locked down?) (bonus for fighting?)
 !@ MAJOR TODO PRINT SHOULD BE REPLACED WITH SEND !@
 !@ SHOULD SEND TO CLIENT !@
+!@ OUTGOING REQUESTS FOR COLORED TEXT IN CONSOLE ARE LABELED AS COLOR :: {} !@
+
 """
 import random
 import socket
@@ -27,9 +14,12 @@ try:
 except:
 	os.mkdir("resources")
 	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
+#!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
+class Resource(object):
+	pass
 class Item(object):
 	def __init__(self):
-		self.attributes = {}
+		#!@ TODO FIX ITEM ID / NAME / AMOUNT
 		self.id = 0
 		self.amount = 1
 		self.name = ""
