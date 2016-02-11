@@ -2,8 +2,8 @@
 """
 !@ MAJOR TODO PRINT SHOULD BE REPLACED WITH SEND !@
 !@ SHOULD SEND TO CLIENT !@
-!@ OUTGOING REQUESTS FOR COLORED TEXT IN CONSOLE ARE LABELED AS COLOR :: {} !@
-
+!@ OUTGOING REQUESTS FOR COLORED TEXT IN CONSOLE ARE LABELED AS COLOR :: !@
+!@ EXAMPLE "::RED:: username ::WHITE:: joins the server"
 """
 import random
 import socket
@@ -29,6 +29,9 @@ class Square(object):
 		self.players  = []
 		self.resources= {}
 		self.buildings= {}
+		self.moves = {}
+	def update_moves(self, pos_x, pos_y):
+		self.moves = {"left" : str(pos_x - 1) + ":" + str(pos_y), "up_left" : str(pos_x - 1) + ":" + str(pos_y - 1), "down_left" : str(pos_x - 1) + ":" + str(pos_y + 1), "right" : str(pos_x + 1) + ":" + str(pos_y), "up_right" :str(pos_x + 1) + ":" + str(pos_y - 1), "down_right":str(pos_x + 1) + ":" + str(pos_y + 1), "up": str(pos_x) + ":" + str(pos_y - 1), "down": str(pos_x) + ":" + str(pos_y + 1)}
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
@@ -41,6 +44,17 @@ class Player(object):
 		#!@ todo add more attributes
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
+		self.moves = {}
+		"""
+		!@ WIP MOVE SYSTEM : NOT INTUATIVE.
+	def update_moves(self, square_number):
+		x_coord, y_coord = square_number.split(":")
+		x_coord = int(x_coord)
+		y_coord = int(y_coord)
+		for move in self.moves:
+			self.moves.remove(move)
+		self.moves.update({"left": str(x_coord-1)+ " : " str , "right": x_coord+1, "up": y_coord + 1, "down": y_coord-1, "up-left": y})
+		"""
 class Building(object):
 	def __init__(self):
 		self.players = []
@@ -72,12 +86,14 @@ class Map(object):
 		self.map = {}
 		self.squares = squares
 	def generate(self, size):
-		for y in range(size):
-			for x in range(size):
-				self.map.update({str(x+1) + ":" + str(y+1): random.choice(self.squares)})	
+		for y in range(1, size + 1):
+			for x in range(1, size + 1):
+				self.map.update({str(x) + ":" + str(y) : random.choice(self.squares)()})
+				self.map[str(x)+":"+str(y)].update_moves(x,y)	
 class Engine(object):
-	def __init__(self, variables):
+	def __init__(self, variables, map):
 		self.variables = variables
+		self.map = map
 	def save(self):
 		pickle.dump(self.variables, open(os.path.join("resources", "save.p"), 'wb'))
 	def load(self):
@@ -89,3 +105,23 @@ class Engine(object):
 			print "Items must be a list"
 		for item in items:
 			object.items.update({item.name: items})
+	def add_player(self, square, player):
+		square.players.append(player)
+	def remove_player(self, square, player):
+		square.players.remove(player)
+	def move(self, square, player, direction):
+		x, y = square.moves[direction].split(":")
+		if (x != 0) and (y != 0):
+			move = square.moves[direction]
+			self.add_player(self.map.map[move], player)
+			self.remove_player(square, player)
+			return True
+		else:
+			return False
+map = Map([Swamp, Desert])
+map.generate(20)
+main = Engine("", map)
+main.add_player(main.map.map["1:1"], "me")
+print main.map.map["1:1"]
+main.move(main.map.map["1:1"], "me", "down")
+print main.map.map["1:2"].players
