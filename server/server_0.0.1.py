@@ -118,6 +118,12 @@ class Engine(object):
 			return True
 		else:
 			return False
+	def add_item(self, sqaure, player, item):
+		pass
+	def use_item(self, square, player, item):
+		pass
+	def main(self, socket):
+		pass
 map = Map([Swamp, Desert])
 map.generate(20)
 main = Engine("", map)
