@@ -26,7 +26,7 @@ class Item(object):
 class Square(object):
 	def __init__(self):
 		self.items    = {}
-		self.players  = []
+		self.players  = {}
 		self.resources= {}
 		self.buildings= {}
 		self.moves = {}
@@ -39,7 +39,8 @@ class Job(object):
 class Group(object):
 	pass
 class Player(object):
-	def __init__(self):
+	def __init__(self, name):
+		self.name = name
 		self.items      = {}
 		#!@ todo add more attributes
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
@@ -57,7 +58,7 @@ class Player(object):
 		"""
 class Building(object):
 	def __init__(self):
-		self.players = []
+		self.players = {}
 		self.items   = {}
 	def describe(self):
 		print "This is a basic description, update it when you make a building in a square"
@@ -106,9 +107,9 @@ class Engine(object):
 		for item in items:
 			object.items.update({item.name: items})
 	def add_player(self, square, player):
-		square.players.append(player)
+		square.players.update({player.name: player})
 	def remove_player(self, square, player):
-		square.players.remove(player)
+		del square.players[player.name]
 	def move(self, square, player, direction):
 		x, y = square.moves[direction].split(":")
 		if (x != 0) and (y != 0):
@@ -119,15 +120,16 @@ class Engine(object):
 		else:
 			return False
 	def add_item(self, sqaure, player, item):
-		pass
+		square.players[player].invetory.update({item.name: item})
 	def use_item(self, square, player, item):
 		pass
 	def main(self, socket):
 		pass
 map = Map([Swamp, Desert])
+me = Player("me")
 map.generate(20)
 main = Engine("", map)
-main.add_player(main.map.map["1:1"], "me")
-print main.map.map["1:1"]
-main.move(main.map.map["1:1"], "me", "down")
+main.add_player(main.map.map["1:1"], me)
+print main.map.map["1:1"].players
+main.move(main.map.map["1:1"], me, "down")
 print main.map.map["1:2"].players
