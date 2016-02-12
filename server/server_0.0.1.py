@@ -23,6 +23,8 @@ class Item(object):
 		self.id = 0
 		self.amount = 1
 		self.name = ""
+	def use(self):
+		print "this fuction uses the item"
 class Square(object):
 	def __init__(self):
 		self.items    = {}
@@ -120,16 +122,19 @@ class Engine(object):
 		else:
 			return False
 	def add_item(self, sqaure, player, item):
-		square.players[player].invetory.update({item.name: item})
+		square.players[player.name].inventory.update({item.name: item})
 	def use_item(self, square, player, item):
-		pass
+		square.players[player.name].inventory[item.name].use()
+		del square.players[player.name].inventory[item.name]
+	def spawn_player(self, player):
+		square = random.choice(self.map.map.values())
+		square.players.update({player.name: player})
 	def main(self, socket):
 		pass
 map = Map([Swamp, Desert])
 me = Player("me")
 map.generate(20)
 main = Engine("", map)
-main.add_player(main.map.map["1:1"], me)
-print main.map.map["1:1"].players
-main.move(main.map.map["1:1"], me, "down")
-print main.map.map["1:2"].players
+main.spawn_player(me)
+for thing in main.map.map.values():
+	print thing.players
