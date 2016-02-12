@@ -32,8 +32,10 @@ class Square(object):
 		self.resources= {}
 		self.buildings= {}
 		self.moves = {}
+		self.pos = None
 	def update_moves(self, pos_x, pos_y):
 		self.moves = {"left" : str(pos_x - 1) + ":" + str(pos_y), "up_left" : str(pos_x - 1) + ":" + str(pos_y - 1), "down_left" : str(pos_x - 1) + ":" + str(pos_y + 1), "right" : str(pos_x + 1) + ":" + str(pos_y), "up_right" :str(pos_x + 1) + ":" + str(pos_y - 1), "down_right":str(pos_x + 1) + ":" + str(pos_y + 1), "up": str(pos_x) + ":" + str(pos_y - 1), "down": str(pos_x) + ":" + str(pos_y + 1)}
+		self.pos = str(pos_x)+ ":" +str(pos_y)
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 class Job(object):
@@ -94,9 +96,9 @@ class Map(object):
 				self.map.update({str(x) + ":" + str(y) : random.choice(self.squares)()})
 				self.map[str(x)+":"+str(y)].update_moves(x,y)	
 class Engine(object):
-	def __init__(self, variables, map):
-		self.variables = variables
+	def __init__(self, map):
 		self.map = map
+		self.players = {}
 	def save(self):
 		pickle.dump(self.variables, open(os.path.join("resources", "save.p"), 'wb'))
 	def load(self):
@@ -129,12 +131,18 @@ class Engine(object):
 	def spawn_player(self, player):
 		square = random.choice(self.map.map.values())
 		square.players.update({player.name: player})
-	def main(self, socket):
-		pass
+		player.pos = square.pos
+		self.players.update({player.name: player})
+	def destroy_player(self, player):
+		del self.players[player.name]
+	def main(self):
+		self.socket
 map = Map([Swamp, Desert])
 me = Player("me")
 map.generate(20)
-main = Engine("", map)
+main = Engine(map)
+main2= Engine(map)
 main.spawn_player(me)
-for thing in main.map.map.values():
-	print thing.players
+print main.players[me.name].pos
+if main.map.map == main2.map.map:
+	print "yes"
