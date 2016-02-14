@@ -71,17 +71,29 @@ class Swamp(Square):
 	def describe(self):
 		print "You arrive in a bogged area."
 		print "There appears to be a great amount of wood in this area, along with an ample water supply"
-		print "There are also %s" % "; ".join(self.items)
+		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
+		print "There are also %s" % "; ".join(self.items.keys())
 class Desert(Square):
 	type = "desert"
 	def describe(self):
 		print "You arrive in a sprawling desert."
 		print "There appears to be a great amount of sand here, there is an oasis in the middle of the desert."
-		print "There are also %s" % "; ".join(self.items)
+		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
+		print "There are also %s" % "; ".join(self.items.keys())
 class Forrest(Square):
-	pass
+	type = "forrest"
+	def describe(self):
+		print "You arrive in a wooded area."
+		print "There appears to be a great amount of wood here, there is an opening in the middle."
+		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
+		print "There are also %s" % "; ".join(self.items.keys())
 class City(Square):
-	pass
+	type = "city"
+	def describe(self):
+		print "You arrive in a city."
+		print "There are spawling skyscrapers where ever you turn."
+		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
+		print "There are also %s" % "; ".join(self.items.keys())
 class Bank(Building):
 	pass
 class Fortress(Building):
