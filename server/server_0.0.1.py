@@ -9,6 +9,7 @@ import random
 import socket
 import pickle
 import os
+import console
 try:
 	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
 except:
@@ -93,10 +94,19 @@ class Map(object):
 		self.map = {}
 		self.squares = squares
 	def generate(self, size):
+		t_size = float(size * size)
+		c_size = 0.0
+		cycle = 0
 		for y in range(1, size + 1):
 			for x in range(1, size + 1):
 				self.map.update({str(x) + ":" + str(y) : random.choice(self.squares)()})
-				self.map[str(x)+":"+str(y)].update_moves(x,y)	
+				self.map[str(x)+":"+str(y)].update_moves(x,y)
+				cycle += 1
+				c_size += 1
+				if cycle >= 10:
+					print "Loading (%.2f)..." % ((c_size / t_size) * 100)
+					console.clear()
+					cycle = 0
 class Engine(object):
 	def __init__(self, map):
 		self.map = map
@@ -141,7 +151,7 @@ class Engine(object):
 		self.socket
 map = Map([Swamp, Desert])
 me = Player("me")
-map.generate(20)
+map.generate(100)
 main = Engine(map)
 main2= Engine(map)
 main.spawn_player(me)
