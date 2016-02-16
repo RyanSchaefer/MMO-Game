@@ -50,16 +50,6 @@ class Player(object):
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
 		self.moves = {}
-		"""
-		!@ WIP MOVE SYSTEM : NOT INTUATIVE.
-	def update_moves(self, square_number):
-		x_coord, y_coord = square_number.split(":")
-		x_coord = int(x_coord)
-		y_coord = int(y_coord)
-		for move in self.moves:
-			self.moves.remove(move)
-		self.moves.update({"left": str(x_coord-1)+ " : " str , "right": x_coord+1, "up": y_coord + 1, "down": y_coord-1, "up-left": y})
-		"""
 class Building(object):
 	def __init__(self):
 		self.players = {}
