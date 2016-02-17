@@ -9,7 +9,12 @@ import random
 import socket
 import pickle
 import os
-import console
+try:
+	import console
+	ios = 1
+except:
+	ios = 0
+	pass
 try:
 	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
 except:
@@ -104,8 +109,13 @@ class Map(object):
 				cycle += 1
 				c_size += 1
 				if cycle >= 10:
-					print "Loading (%.2f)..." % ((c_size / t_size) * 100)
-					console.clear()
+					print "Loading (%.2f%%)..." % ((c_size / t_size) * 100)
+					if ios == 1:
+						console.clear()
+					elif os.name == "nt":
+						os.system("cls")
+					else:
+						os.system("clear")
 					cycle = 0
 class Engine(object):
 	def __init__(self, map):
@@ -151,10 +161,11 @@ class Engine(object):
 		self.socket
 map = Map([Swamp, Desert])
 me = Player("me")
-map.generate(100)
+map.generate(1000)
 main = Engine(map)
 main2= Engine(map)
 main.spawn_player(me)
 print main.players[me.name].pos
 if main.map.map == main2.map.map:
 	print "yes"
+raw_input()
