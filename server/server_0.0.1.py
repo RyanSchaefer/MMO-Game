@@ -9,12 +9,8 @@ import random
 import socket
 import pickle
 import os
-try:
-	import console
-	ios = 1
-except:
-	ios = 0
-	pass
+import console
+from time import sleep
 try:
 	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
 except:
@@ -22,7 +18,10 @@ except:
 	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
 #!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
 class Resource(object):
-	pass
+	def __init__(self):
+		self.name = None
+		self.amount = None
+		self.extract_time = None
 class Item(object):
 	def __init__(self):
 		#!@ TODO FIX ITEM ID / NAME / AMOUNT
@@ -44,6 +43,10 @@ class Square(object):
 		self.pos = str(pos_x)+ ":" +str(pos_y)
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
+	def extract(self, resource, player):
+		if self.resources[resource.name] > 0:
+			sleep(resource.extract_time)
+			self.resources[resource.name].amount -= 1
 class Job(object):
 	pass
 class Group(object):
@@ -110,12 +113,7 @@ class Map(object):
 				c_size += 1
 				if cycle >= 10:
 					print "Loading (%.2f%%)..." % ((c_size / t_size) * 100)
-					if ios == 1:
-						console.clear()
-					elif os.name == "nt":
-						os.system("cls")
-					else:
-						os.system("clear")
+					console.clear()
 					cycle = 0
 class Engine(object):
 	def __init__(self, map):
@@ -161,11 +159,10 @@ class Engine(object):
 		self.socket
 map = Map([Swamp, Desert])
 me = Player("me")
-map.generate(1000)
+map.generate(10)
 main = Engine(map)
 main2= Engine(map)
 main.spawn_player(me)
 print main.players[me.name].pos
 if main.map.map == main2.map.map:
 	print "yes"
-raw_input()
