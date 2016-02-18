@@ -17,6 +17,14 @@ class Resource(object):
 		self.name = None
 		self.amount = None
 		self.extract_time = None
+class Wood(resource):
+	pass
+class Stone(resource):
+	pass
+class Water(resource):
+	pass
+class Sand(resource):
+	pass
 class Item(object):
 	def __init__(self):
 		#!@ TODO FIX ITEM ID / NAME / AMOUNT
@@ -29,7 +37,8 @@ class Square(object):
 	def __init__(self):
 		self.items    = {}
 		self.players  = {}
-		self.resources= {}
+		self.resources = {}
+		self.resource_amounts = {}
 		self.buildings= {}
 		self.moves = {}
 		self.pos = None
@@ -42,6 +51,8 @@ class Square(object):
 		if self.resources[resource.name] > 0:
 			sleep(resource.extract_time)
 			self.resources[resource.name].amount -= 1
+	def add_resource(self, type, amount):
+		pass
 class Job(object):
 	pass
 class Group(object):
@@ -150,8 +161,14 @@ class Engine(object):
 		self.players.update({player.name: player})
 	def destroy_player(self, player):
 		del self.players[player.name]
-	def main(self):
+	def player_thread(self):
 		self.socket
+	def handout_resources(self, map):
+		for sqaure in map.map:
+			resource_amounts = square.resource_amounts
+			
+	def handout_items(self, square):
+		pass
 """
 Run once function
 map = Map([Desert, Swamp, City, Forrest])
