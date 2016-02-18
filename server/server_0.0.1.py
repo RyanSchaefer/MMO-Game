@@ -11,11 +11,6 @@ import pickle
 import os
 import console
 from time import sleep
-try:
-	pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
-except:
-	os.mkdir("resources")
-	pickle.dump("", open(os.path.join("resources", "save.p"), 'wb'))
 #!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
 class Resource(object):
 	def __init__(self):
@@ -120,9 +115,9 @@ class Engine(object):
 		self.map = map
 		self.players = {}
 	def save(self):
-		pickle.dump(self.variables, open(os.path.join("resources", "save.p"), 'wb'))
-	def load(self):
-		self.variables = pickle.load(open(os.path.join("resources", "save.p"), 'rb'))
+		pickle.dump(self.map, open(os.path.join("resources", "save.p"), 'wb'))
+	def load(self, map):
+		self.map = map
 	def add_item(self, object, items):
 		try:
 			items[0]
@@ -157,12 +152,10 @@ class Engine(object):
 		del self.players[player.name]
 	def main(self):
 		self.socket
-map = Map([Swamp, Desert])
-me = Player("me")
-map.generate(10)
+"""
+Run once function
+map = Map([Desert, Swamp, City, Forrest])
+map.generate(100)
 main = Engine(map)
-main2= Engine(map)
-main.spawn_player(me)
-print main.players[me.name].pos
-if main.map.map == main2.map.map:
-	print "yes"
+main.save()
+"""
