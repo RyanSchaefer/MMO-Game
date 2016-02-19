@@ -1,7 +1,6 @@
 # coding: utf-8
 """
-!@ MAJOR TODO PRINT SHOULD BE REPLACED WITH SEND !@
-!@ SHOULD SEND TO CLIENT !@
+!@ MAJOR TODO SENDING TO CLIENT!@
 !@ OUTGOING REQUESTS FOR COLORED TEXT IN CONSOLE ARE LABELED AS COLOR :: !@
 !@ EXAMPLE "::RED:: username ::WHITE:: joins the server"
 """
@@ -13,18 +12,19 @@ import console
 from time import sleep
 #!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
 class Resource(object):
-	def __init__(self):
-		self.name = None
+	name = None
+	def __init__(self, rarity):
 		self.amount = None
 		self.extract_time = None
-class Wood(resource):
-	pass
-class Stone(resource):
-	pass
-class Water(resource):
-	pass
-class Sand(resource):
-	pass
+		self.rarity = None
+class Wood(Resource):
+	name = "wood"
+class Stone(Resource):
+	name = "stone"
+class Water(Resource):
+	name = "water"
+class Sand(Resource):
+	name = "sand"
 class Item(object):
 	def __init__(self):
 		#!@ TODO FIX ITEM ID / NAME / AMOUNT
@@ -38,7 +38,6 @@ class Square(object):
 		self.items    = {}
 		self.players  = {}
 		self.resources = {}
-		self.resource_amounts = {}
 		self.buildings= {}
 		self.moves = {}
 		self.pos = None
@@ -52,7 +51,7 @@ class Square(object):
 			sleep(resource.extract_time)
 			self.resources[resource.name].amount -= 1
 	def add_resource(self, type, amount):
-		pass
+		pass 
 class Job(object):
 	pass
 class Group(object):
@@ -164,9 +163,7 @@ class Engine(object):
 	def player_thread(self):
 		self.socket
 	def handout_resources(self, map):
-		for sqaure in map.map:
-			resource_amounts = square.resource_amounts
-			
+		pass
 	def handout_items(self, square):
 		pass
 """
