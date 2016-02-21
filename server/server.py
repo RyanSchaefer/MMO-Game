@@ -13,10 +13,9 @@ from time import sleep
 #!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
 class Resource(object):
 	name = None
-	def __init__(self, rarity):
-		self.amount = None
-		self.extract_time = None
-		self.rarity = None
+	extract_time = 0
+	def __init__(self):
+		self.amount = 0
 class Wood(Resource):
 	name = "wood"
 class Stone(Resource):
@@ -37,9 +36,9 @@ class Square(object):
 	def __init__(self):
 		self.items    = {}
 		self.players  = {}
-		self.resources = {}
 		self.buildings= {}
 		self.moves = {}
+		self.resources = []
 		self.pos = None
 	def update_moves(self, pos_x, pos_y):
 		self.moves = {"left" : str(pos_x - 1) + ":" + str(pos_y), "up_left" : str(pos_x - 1) + ":" + str(pos_y - 1), "down_left" : str(pos_x - 1) + ":" + str(pos_y + 1), "right" : str(pos_x + 1) + ":" + str(pos_y), "up_right" :str(pos_x + 1) + ":" + str(pos_y - 1), "down_right":str(pos_x + 1) + ":" + str(pos_y + 1), "up": str(pos_x) + ":" + str(pos_y - 1), "down": str(pos_x) + ":" + str(pos_y + 1)}
@@ -51,7 +50,11 @@ class Square(object):
 			sleep(resource.extract_time)
 			self.resources[resource.name].amount -= 1
 	def add_resource(self, type, amount):
-		pass 
+		for resoure in resources:
+			if resource.name == type.name:
+				resource.amount += amount
+	def init_resources(self):
+		self.resources = []
 class Job(object):
 	pass
 class Group(object):
@@ -77,6 +80,8 @@ class Swamp(Square):
 		print "There appears to be a great amount of wood in this area, along with an ample water supply"
 		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
 		print "There are also %s" % "; ".join(self.items.keys())
+	def init_resources(self):
+		self.resources = [Water(), Wood()]
 class Desert(Square):
 	type = "desert"
 	def describe(self):
@@ -84,6 +89,8 @@ class Desert(Square):
 		print "There appears to be a great amount of sand here, there is an oasis in the middle of the desert."
 		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
 		print "There are also %s" % "; ".join(self.items.keys())
+	def init_resources(self):
+		self.resources = [Sand()]
 class Forrest(Square):
 	type = "forrest"
 	def describe(self):
@@ -91,6 +98,8 @@ class Forrest(Square):
 		print "There appears to be a great amount of wood here, there is an opening in the middle."
 		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
 		print "There are also %s" % "; ".join(self.items.keys())
+	def init_resources(self):
+		self.resources = [Wood()]
 class City(Square):
 	type = "city"
 	def describe(self):
@@ -98,6 +107,8 @@ class City(Square):
 		print "There are spawling skyscrapers where ever you turn."
 		print "You notice there are other buildings including %s" % "; ".join(self.buildings.keys())
 		print "There are also %s" % "; ".join(self.items.keys())
+	def init_resources(self):
+		self.resources = [Water()]
 class Bank(Building):
 	pass
 class Fortress(Building):
@@ -112,8 +123,10 @@ class Map(object):
 		cycle = 0
 		for y in range(1, size + 1):
 			for x in range(1, size + 1):
-				self.map.update({str(x) + ":" + str(y) : random.choice(self.squares)()})
-				self.map[str(x)+":"+str(y)].update_moves(x,y)
+				name = str(x) + ":" + str(y)
+				self.map.update({name : random.choice(self.squares)()})
+				self.map[name].update_moves(x,y)
+				self.map[name].init_resources()
 				cycle += 1
 				c_size += 1
 				if cycle >= 10:
@@ -162,14 +175,9 @@ class Engine(object):
 		del self.players[player.name]
 	def player_thread(self):
 		self.socket
-	def handout_resources(self, map):
-		pass
+	def handout_resources(self):
+		for square in self.map.map:
+			for resource in self.map.map[square].resources:
+				resource.amount += random.randint(1, 10)
 	def handout_items(self, square):
 		pass
-"""
-Run once function
-map = Map([Desert, Swamp, City, Forrest])
-map.generate(100)
-main = Engine(map)
-main.save()
-"""
