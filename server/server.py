@@ -9,6 +9,7 @@ import socket
 import pickle
 import os
 import console
+import json
 from time import sleep
 #!@ TODO MAKE ITEM / RESOURCE (ITEMS ARE SINGULAR AND RESOURCES ARE MUTLIPLE)
 class Resource(object):
@@ -49,6 +50,7 @@ class Square(object):
 		if self.resources[resource.name] > 0:
 			sleep(resource.extract_time)
 			self.resources[resource.name].amount -= 1
+			player.add_resource(resource, 1)
 	def add_resource(self, type, amount):
 		for resoure in resources:
 			if resource.name == type.name:
@@ -62,11 +64,16 @@ class Group(object):
 class Player(object):
 	def __init__(self, name):
 		self.name = name
-		self.items      = {}
+		self.inventory= {}
 		#!@ todo add more attributes
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
 		self.moves = {}
+	def add_resource(self, resource, amount):
+		if resource.name in self.inventory:
+			self.inventory[resource.name] += amount
+		if resource.name not in self.inventory:
+			self.inventory.update(resource.name : amount)
 class Building(object):
 	def __init__(self):
 		self.players = {}
@@ -180,4 +187,6 @@ class Engine(object):
 			for resource in self.map.map[square].resources:
 				resource.amount += random.randint(1, 10)
 	def handout_items(self, square):
+		pass
+	def client_thread(self, socket):
 		pass
