@@ -81,17 +81,28 @@ class Square(object):
 		#changes what resources are avialable to be extracted
 		self.resources = []
 class Job(object):
+	def work(sqaure, resource, player, salary):
+		square.extract(resource, player)
+		player.inventory[resource.name] -= 1
+		player.group.resources[resource.name] += 1
+		player.balance += salary
+class Lumberjack(job):
+	pass
+class Miner(job):
 	pass
 class Group(object):
-	pass
+	def __init__(self):
+		self.resources = {}
 class Player(object):
 	def __init__(self, name):
 		self.name = name
 		self.inventory= {}
+		self.job = None
 		#!@ todo add more attributes
 		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
 		self.group          = None
 		self.moves = {}
+		self.balance = 0
 	def add_resource(self, resource, amount):
 		#adds a resource to a players inventory
 		if resource.name in self.inventory:
@@ -167,6 +178,8 @@ class Map(object):
 					print "Loading (%.2f%%)..." % ((c_size / t_size) * 100)
 					console.clear()
 					cycle = 0
+class Secure_Socket(object):
+	pass
 class Engine(object):
 	def __init__(self, map):
 		self.map = map
