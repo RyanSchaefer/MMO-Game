@@ -22,6 +22,11 @@ import console
 import json
 from time import sleep
 #Resources class : multiple objects used for crafting
+class ERROR(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
 class Resource(object):
 	#every resource shares same characteristic overriden per specific resource
 	name = None
@@ -48,9 +53,6 @@ class Item(object):
 		self.id = 0
 		self.amount = 1
 		self.name = ""
-	def use(self):
-		# not implemented yet
-		print "this fuction uses the item"
 #One square of a map; has resources / items / players / avialable moves from it / a position on the map
 class Square(object):
 	def __init__(self):
@@ -60,10 +62,6 @@ class Square(object):
 		self.moves = {}
 		self.resources = []
 		self.pos = None
-	def update_moves(self, pos_x, pos_y):
-		#called when adding to the map, when a player is on it it governs where the player can move to
-		self.moves = {"left" : str(pos_x - 1) + ":" + str(pos_y), "up_left" : str(pos_x - 1) + ":" + str(pos_y - 1), "down_left" : str(pos_x - 1) + ":" + str(pos_y + 1), "right" : str(pos_x + 1) + ":" + str(pos_y), "up_right" :str(pos_x + 1) + ":" + str(pos_y - 1), "down_right":str(pos_x + 1) + ":" + str(pos_y + 1), "up": str(pos_x) + ":" + str(pos_y - 1), "down": str(pos_x) + ":" + str(pos_y + 1)}
-		self.pos = str(pos_x)+ ":" +str(pos_y)
 	def describe(self):
 		print "This is a basic description of a square, update it when you make a square."
 	def extract(self, resource, player):
@@ -72,43 +70,45 @@ class Square(object):
 			sleep(resource.extract_time)
 			self.resources[resource.name].amount -= 1
 			player.add_resource(resource, 1)
-	def add_resource(self, type, amount):
-		#adds a resource to the square
-		for resoure in resources:
-			if resource.name == type.name:
-				resource.amount += amount
+			return True
+		return False
 	def init_resources(self):
 		#changes what resources are avialable to be extracted
 		self.resources = []
 class Job(object):
-	def work(sqaure, resource, player, salary):
-		square.extract(resource, player)
-		player.inventory[resource.name] -= 1
-		player.group.resources[resource.name] += 1
-		player.balance += salary
-class Lumberjack(job):
-	pass
-class Miner(job):
-	pass
+	# for paying work
+	def __init__(self, group, resource, salary):
+		self.group = group
+		self.salary = salary
+		self.resource = resource
+	def work(self, player):
+		if player.name in self.group.members.keys() and player.pos.extract(self.resource, player):
+			player.inventory[self.resource.name] -= 1
+			self.group.resources[self.resource.name] += 1
+			player.balance += self.salary
+			self.group.balance -= self.salary
 class Group(object):
-	def __init__(self):
-		self.resources = {}
+	def __init__(self, name):
+		if isinstance(name, basestring):
+			self.resources = {}
+			self.members = {}
+			self.name = name
+			self.balance = 0
+		else:
+			raise ERROR("Group arg must be a string")
 class Player(object):
 	def __init__(self, name):
-		self.name = name
-		self.inventory= {}
-		self.job = None
-		#!@ todo add more attributes
-		self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
-		self.group          = None
-		self.moves = {}
-		self.balance = 0
-	def add_resource(self, resource, amount):
-		#adds a resource to a players inventory
-		if resource.name in self.inventory:
-			self.inventory[resource.name] += amount
-		if resource.name not in self.inventory:
-			self.inventory.update({resource.name : amount})
+		if isinstance(name, basestring):
+			self.name = name
+			self.inventory= {}
+			self.job = None
+			#!@ todo add more attributes
+			self.attributes     = {"health": 100, "carry_capacity": 100, "evade": 0, "perception": 0}
+			self.group          = None
+			self.moves = {}
+			self.balance = 0
+		else:
+			raise ERROR("Player arg must be string")
 class Building(object):
 	def __init__(self):
 		self.players = {}
@@ -159,10 +159,16 @@ class Map(object):
 	def __init__(self, squares):
 		self.map = {}
 		self.squares = squares
+	def update_moves(self, square, pos_x, pos_y):
+	#called when adding to the map, when a player is on it it governs where the player can move to
+		square.moves = {"left" : str(pos_x - 1) + ":" + str(pos_y), "up_left" : str(pos_x - 1) + ":" + str(pos_y - 1), "down_left" : str(pos_x - 1) + ":" + str(pos_y + 1), "right" : str(pos_x + 1) + ":" + str(pos_y), "up_right" :str(pos_x + 1) + ":" + str(pos_y - 1), "down_right":str(pos_x + 1) + ":" + str(pos_y + 1), "up": str(pos_x) + ":" + str(pos_y - 1), "down": str(pos_x) + ":" + str(pos_y + 1)}
+		self.pos = str(pos_x)+ ":" +str(pos_y)
 	def generate(self, size):
 		#generates a map of size x size full of random squares that can be on the map
 		#map is a dict full of number : number pairs naming the square
 		#each square must be properly initilized
+		if not isinstance(size, int) or size == 0:
+			raise ERROR("Generation number must be an int > zero")
 		t_size = float(size * size)
 		c_size = 0.0
 		cycle = 0
@@ -170,7 +176,7 @@ class Map(object):
 			for x in range(1, size + 1):
 				name = str(x) + ":" + str(y)
 				self.map.update({name : random.choice(self.squares)()})
-				self.map[name].update_moves(x,y)
+				self.update_moves(self.map[name],x,y)
 				self.map[name].init_resources()
 				cycle += 1
 				c_size += 1
@@ -178,12 +184,11 @@ class Map(object):
 					print "Loading (%.2f%%)..." % ((c_size / t_size) * 100)
 					console.clear()
 					cycle = 0
-class Secure_Socket(object):
-	pass
 class Engine(object):
 	def __init__(self, map):
-		self.map = map
+		self.map = map.map
 		self.players = {}
+		self.groups = {}
 	def save(self):
 		#dumps save to a pickle file
 		pickle.dump(self.map, open(os.path.join("resources", "save.p"), 'wb'))
@@ -209,7 +214,7 @@ class Engine(object):
 		x, y = square.moves[direction].split(":")
 		if (x != 0) and (y != 0):
 			move = square.moves[direction]
-			self.add_player(self.map.map[move], player)
+			self.add_player(self.map[move], player)
 			self.remove_player(square, player)
 			return True
 		else:
@@ -222,21 +227,35 @@ class Engine(object):
 		del square.players[player.name].inventory[item.name]
 	def spawn_player(self, player):
 		# spawns player on random sqaure
-		square = random.choice(self.map.map.values())
-		square.players.update({player.name: player})
-		player.pos = square.pos
-		self.players.update({player.name: player})
+		square = random.choice(self.map.values())
+		if player not in self.players.keys():
+			x = Player(player)
+			square.players.update({x.name: x})
+			x.pos = square.pos
+			self.players.update({x.name: x})
+			return True
+		return False
 	def destroy_player(self, square, player):
 		# for when a player leaves the game
 		del square.players[player.name]
-	def player_thread(self):
-		self.socket
+	def create_group(self, group):
+		x = Group(group)
+		self.groups.update({x.name: x})
+	def assign_group(self, group, player):
+		group.members.update({player.name: player})
+	def assign_job(self, group, player):
+		pass
 	def handout_resources(self):
 		# randomly hands out resources to sqaure based on objects in dict
-		for square in self.map.map:
-			for resource in self.map.map[square].resources:
+		for square in self.map:
+			for resource in self.map[square].resources:
 				resource.amount += random.randint(1, 10)
 	def handout_items(self, square):
 		pass
 	def client_thread(self, socket):
 		pass
+	def create_job(group, resource, salary):
+		group.jobs = Job(group, resource, salary)
+x = Map([City, Forrest])
+x.generate(0)
+main = Engine(x)
