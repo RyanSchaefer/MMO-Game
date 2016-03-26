@@ -254,8 +254,12 @@ class Engine(object):
 		pass
 	def client_thread(self, socket):
 		pass
-	def create_job(group, resource, salary):
+	def create_job(self, group, resource, salary):
+		#this is all we need to make america great again
 		group.jobs = Job(group, resource, salary)
 x = Map([City, Forrest])
 x.generate(0)
 main = Engine(x)
+main.spawn_player("me")
+main.create_group("group")
+main.create_job(main.groups["group"], )
